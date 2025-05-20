@@ -70,7 +70,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.financetracker.financetracker/com.financetracker.financetracker.HelloApplication
+                                com.financetracker.financetracker/com.financetracker.financetracker.Main
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

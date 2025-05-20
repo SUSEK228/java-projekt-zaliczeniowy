@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.financetracker.financetracker.MainController"
+      alignment="CENTER" spacing="10">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Finance Tracker" style="-fx-font-size: 20px;" />
+
+    <TextField fx:id="descriptionField" promptText="Opis transakcji" />
+    <TextField fx:id="amountField" promptText="Kwota (+/-)" />
+
+    <Button text="Dodaj transakcję" onAction="#handleAddTransaction" />
+
+    <ListView fx:id="transactionList" prefHeight="200" />
+
+    <Label fx:id="balanceLabel" text="Saldo: 0.00" style="-fx-font-weight: bold;" />
+
+</VBox>
