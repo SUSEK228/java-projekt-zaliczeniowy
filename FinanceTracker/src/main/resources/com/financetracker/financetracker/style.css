@@ -15,21 +15,31 @@
 
 /* SIDEBAR */
 .sidebar {
-    -fx-background-color: #1f1f1f;
-    -fx-padding: 20;
-    -fx-spacing: 10;
-    -fx-pref-width: 160;
+    -fx-background-color: #1a1a1a;
+    -fx-padding: 20 0 0 0 0;
+    -fx-spacing: 25;
+    -fx-alignment: TOP_CENTER;
+    -fx-pref-width: 80;
 }
 
-.sidebar .button {
-    -fx-background-color: #FF8800;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-background-radius: 8;
+.sidebar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFA552;
+    -fx-font-size: 20px;
+    -fx-cursor: hand;
 }
 
-.sidebar .button:hover {
-    -fx-background-color: #B34E00;
+.sidebar-button:hover {
+    -fx-text-fill: #FF8800;
+}
+
+.sidebar-button:selected {
+    -fx-text-fill: #FF8800;
+}
+
+.sidebar-icon {
+    -fx-icon-color: white;
+    -fx-icon-size: 24px;
 }
 
 /* FORM CARD */
@@ -64,3 +74,5 @@
 .button:hover {
     -fx-background-color: #B34E00;
 }
+
+

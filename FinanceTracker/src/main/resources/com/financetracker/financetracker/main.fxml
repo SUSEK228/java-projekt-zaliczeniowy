@@ -3,6 +3,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -20,11 +21,26 @@
     <!-- SIDEBAR -->
     <left>
         <VBox styleClass="sidebar" alignment="TOP_CENTER">
-            <Label text="💼" style="-fx-font-size: 24px;" />
-            <Button text="Dashboard"/>
-            <Button text="Budżet"/>
-            <Button text="Wydatki"/>
-            <Button text="Statystyki"/>
+            <Button styleClass="sidebar-button">
+                <graphic>
+                    <FontIcon iconLiteral="mdi-home" styleClass="sidebar-icon"/>
+                </graphic>
+            </Button>
+            <Button styleClass="sidebar-button">
+                <graphic>
+                    <FontIcon iconLiteral="mdi-cash" styleClass="sidebar-icon"/>
+                </graphic>
+            </Button>
+            <Button styleClass="sidebar-button">
+                <graphic>
+                    <FontIcon iconLiteral="mdi-chart-bar" styleClass="sidebar-icon"/>
+                </graphic>
+            </Button>
+            <Button styleClass="sidebar-button">
+                <graphic>
+                    <FontIcon iconLiteral="mdi-wrench" styleClass="sidebar-icon"/>
+                </graphic>
+            </Button>
         </VBox>
     </left>
 
