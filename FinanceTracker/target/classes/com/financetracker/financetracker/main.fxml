@@ -79,7 +79,14 @@
             </HBox>
 
             <!-- Recent Transactions -->
-            <ListView fx:id="transactionList" styleClass="transaction-table" VBox.vgrow="ALWAYS"/>
+            <TableView fx:id="transactionTable" styleClass="transaction-table" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="titleColumn" text="Tytuł" prefWidth="200"/>
+                    <TableColumn fx:id="amountColumn" text="Kwota" prefWidth="150"/>
+                    <TableColumn fx:id="dateColumn" text="Data" prefWidth="150"/>
+                </columns>
+            </TableView>
+
         </VBox>
     </center>
 </BorderPane>
