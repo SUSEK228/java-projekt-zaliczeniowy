@@ -20,6 +20,7 @@ public class MainController {
     @FXML private TableColumn<Transaction, String> titleColumn;
     @FXML private TableColumn<Transaction, Double> amountColumn;
     @FXML private TableColumn<Transaction, String> dateColumn;
+    @FXML private TableColumn<Transaction, String> categoryColumn;
     @FXML private ComboBox<String> categoryComboBox;
     @FXML private TextField descriptionField;
     @FXML private TextField amountField;
@@ -33,6 +34,7 @@ public class MainController {
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         amountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
 
         categoryComboBox.setItems(FXCollections.observableArrayList(
                 "Jedzenie", "Transport", "Rozrywka", "Zdrowie", "Inne"
@@ -47,7 +49,8 @@ public class MainController {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
                 amount REAL NOT NULL,
-                date TEXT NOT NULL
+                date TEXT NOT NULL,
+                category TEXT NOT NULL
             );
         """;
 
@@ -66,18 +69,20 @@ public class MainController {
     }
 
     public void addTransaction(Transaction t) {
-        String sql = "INSERT INTO transactions(title, amount, date) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO transactions(title, amount, date, category) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, t.getTitle());
             pstmt.setDouble(2, t.getAmount());
             pstmt.setString(3, t.getDate());
+            pstmt.setString(4, t.getCategory());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Insert failed: " + e.getMessage());
         }
     }
+
     public List<Transaction> getTransactions() {
         List<Transaction> list = new ArrayList<>();
         String sql = "SELECT * FROM transactions";
@@ -91,7 +96,8 @@ public class MainController {
                         rs.getInt("id"),
                         rs.getString("title"),
                         rs.getDouble("amount"),
-                        rs.getString("date")
+                        rs.getString("date"),
+                        rs.getString("category")
                 );
                 list.add(t);
             }
@@ -116,7 +122,7 @@ public class MainController {
             double amount = Double.parseDouble(amountText);
             String date = java.time.LocalDate.now().toString();
 
-            Transaction t = new Transaction(description, amount, date); // Można dodać kategorię jeśli rozbudujesz klasę
+            Transaction t = new Transaction(description, amount, date, category); // Można dodać kategorię jeśli rozbudujesz klasę
             addTransaction(t);
             loadTransactions();
 

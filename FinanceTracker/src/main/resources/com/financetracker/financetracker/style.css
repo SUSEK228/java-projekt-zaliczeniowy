@@ -116,6 +116,17 @@
     -fx-text-fill: black;
 }
 
+.transaction-table .table-cell {
+    -fx-text-fill: white;
+    -fx-alignment: CENTER-LEFT;
+    -fx-padding: 5 10;
+}
+
+HBox > Label {
+    -fx-text-fill: white !important;
+    -fx-font-size: 14px;
+}
+
 /* Responsive behavior fallback */
 .pane, .vbox, .hbox, .border-pane {
     -fx-pref-width: USE_COMPUTED_SIZE;

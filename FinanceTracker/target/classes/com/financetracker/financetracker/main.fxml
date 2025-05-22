@@ -14,7 +14,6 @@
         <HBox styleClass="top-bar" spacing="10">
             <Label text="💰 Finance Tracker"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Label fx:id="balanceLabel" text="Saldo: 0.00 zł"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Label fx:id="dateLabel"/>
         </HBox>
@@ -81,9 +80,10 @@
             <!-- Recent Transactions -->
             <TableView fx:id="transactionTable" styleClass="transaction-table" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="titleColumn" text="Tytuł" prefWidth="200"/>
-                    <TableColumn fx:id="amountColumn" text="Kwota" prefWidth="150"/>
-                    <TableColumn fx:id="dateColumn" text="Data" prefWidth="150"/>
+                    <TableColumn fx:id="titleColumn" text="Title" prefWidth="200"/>
+                    <TableColumn fx:id="amountColumn" text="Amount" prefWidth="150"/>
+                    <TableColumn fx:id="dateColumn" text="Date" prefWidth="150"/>
+                    <TableColumn fx:id="categoryColumn" text="Category" prefWidth="150"/>
                 </columns>
             </TableView>
 
