@@ -65,15 +65,15 @@
             <HBox spacing="15">
                 <VBox styleClass="summary-card">
                     <Label text="All Accounts (PLN)" styleClass="account-title"/>
-                    <Label text="0.00 PLN" styleClass="account-balance"/>
+                    <Label fx:id="allAccountsLabel" text="0.00 PLN" styleClass="account-balance"/>
                 </VBox>
                 <VBox styleClass="summary-card">
                     <Label text="Income This Month" styleClass="account-title"/>
-                    <Label text="0.00 PLN" styleClass="account-balance"/>
+                    <Label fx:id="incomeThisMonthLabel" text="0.00 PLN" styleClass="account-balance"/>
                 </VBox>
                 <VBox styleClass="summary-card">
                     <Label text="Expenses This Month" styleClass="account-title"/>
-                    <Label text="0.00 PLN" styleClass="account-balance"/>
+                    <Label fx:id="expensesThisMonthLabel" text="0.00 PLN" styleClass="account-balance"/>
                 </VBox>
             </HBox>
 
@@ -84,6 +84,7 @@
                     <TableColumn fx:id="amountColumn" text="Amount" prefWidth="150"/>
                     <TableColumn fx:id="dateColumn" text="Date" prefWidth="150"/>
                     <TableColumn fx:id="categoryColumn" text="Category" prefWidth="150"/>
+                    <TableColumn fx:id="actionColumn" text="Usuń" prefWidth="80"/>
                 </columns>
             </TableView>
 

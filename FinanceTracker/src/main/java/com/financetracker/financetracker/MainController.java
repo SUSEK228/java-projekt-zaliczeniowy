@@ -6,12 +6,18 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.event.ActionEvent;
-import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.Button;
+
+
 
 
 
@@ -24,6 +30,10 @@ public class MainController {
     @FXML private ComboBox<String> categoryComboBox;
     @FXML private TextField descriptionField;
     @FXML private TextField amountField;
+    @FXML private Label allAccountsLabel;
+    @FXML private Label incomeThisMonthLabel;
+    @FXML private Label expensesThisMonthLabel;
+    @FXML private TableColumn<Transaction, Void> actionColumn;
 
 
 
@@ -41,6 +51,10 @@ public class MainController {
         ));
 
         loadTransactions();
+        updateSummaryLabels();
+        addDeleteButtonToTable();
+
+
     }
 
     public void createTableIfNotExists() {
@@ -125,6 +139,7 @@ public class MainController {
             Transaction t = new Transaction(description, amount, date, category); // Można dodać kategorię jeśli rozbudujesz klasę
             addTransaction(t);
             loadTransactions();
+            updateSummaryLabels();
 
             // wyczyść formularz
             descriptionField.clear();
@@ -135,5 +150,73 @@ public class MainController {
             System.out.println("Nieprawidłowa kwota.");
         }
     }
+    private void updateSummaryLabels() {
+        double totalIncome = 0;
+        double totalExpense = 0;
+        double monthlyIncome = 0;
+        double monthlyExpense = 0;
+
+        YearMonth currentMonth = YearMonth.now();
+        for (Transaction t : transactionTable.getItems()) {
+            double amount = t.getAmount();
+            LocalDate date = LocalDate.parse(t.getDate());  // konwersja String → LocalDate
+
+            if (amount > 0) {
+                totalIncome += amount;
+                if (YearMonth.from(date).equals(currentMonth)) {
+                    monthlyIncome += amount;
+                }
+            } else if (amount < 0) {
+                totalExpense += Math.abs(amount);
+                if (YearMonth.from(date).equals(currentMonth)) {
+                    monthlyExpense += Math.abs(amount);
+                }
+            }
+        }
+
+        double balance = totalIncome - totalExpense;
+
+        allAccountsLabel.setText(String.format("%.2f PLN", balance));
+        incomeThisMonthLabel.setText(String.format("%.2f PLN", monthlyIncome));
+        expensesThisMonthLabel.setText(String.format("%.2f PLN", monthlyExpense));
+    }
+    private void addDeleteButtonToTable() {
+        actionColumn.setCellFactory(col -> new TableCell<>() {
+            private final Button deleteButton = new Button("🗑");
+
+            {
+                deleteButton.setOnAction(event -> {
+                    Transaction transaction = getTableView().getItems().get(getIndex());
+                    deleteTransaction(transaction);
+                    loadTransactions(); // odświeżenie tabeli
+                    updateSummaryLabels(); // odświeżenie sum
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(deleteButton);
+                }
+            }
+        });
+    }
+    private void deleteTransaction(Transaction transaction) {
+        String sql = "DELETE FROM transactions WHERE id = ?";
+
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, transaction.getId());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Błąd podczas usuwania transakcji: " + e.getMessage());
+        }
+    }
+
+
+
 
 }
