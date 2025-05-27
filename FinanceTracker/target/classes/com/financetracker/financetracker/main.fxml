@@ -24,22 +24,22 @@
         <VBox styleClass="sidebar" alignment="TOP_CENTER" spacing="20">
             <Button styleClass="sidebar-button">
                 <graphic>
-                    <FontIcon iconLiteral="mdi-home" styleClass="sidebar-icon"/>
+                    <FontIcon iconLiteral="mdi2h-home" styleClass="sidebar-icon"/>
                 </graphic>
             </Button>
             <Button styleClass="sidebar-button">
                 <graphic>
-                    <FontIcon iconLiteral="mdi-cash" styleClass="sidebar-icon"/>
+                    <FontIcon iconLiteral="mdi2c-cash" styleClass="sidebar-icon"/>
                 </graphic>
             </Button>
             <Button styleClass="sidebar-button">
                 <graphic>
-                    <FontIcon iconLiteral="mdi-chart-bar" styleClass="sidebar-icon"/>
+                    <FontIcon iconLiteral="mdi2c-chart-bar" styleClass="sidebar-icon"/>
                 </graphic>
             </Button>
             <Button styleClass="sidebar-button">
                 <graphic>
-                    <FontIcon iconLiteral="mdi-wrench" styleClass="sidebar-icon"/>
+                    <FontIcon iconLiteral="mdi2c-cog" styleClass="sidebar-icon"/>
                 </graphic>
             </Button>
         </VBox>
@@ -88,6 +88,22 @@
                 </columns>
             </TableView>
 
+
+            <!-- Filter  -->
+
+            <HBox fx:id="filterBar" styleClass="filter-bar" spacing="8" alignment="CENTER_LEFT">
+                <Label text="Description filter:" />
+                <TextField fx:id="descriptionFilter" promptText="Wpisz tekst..." />
+
+                <Label text="Date filter:" />
+                <DatePicker fx:id="dateFilter" promptText="Wybierz datę" />
+
+                <Button fx:id="filterButton" text="Filter" onAction="#onFilter" />
+                <Button fx:id="clearButton"  text="Clear"  onAction="#onClear" />
+            </HBox>
+
         </VBox>
     </center>
+
+
 </BorderPane>

@@ -1,4 +1,5 @@
 package com.financetracker.financetracker;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,26 +17,34 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.Button;
-
-
-
-
+import javafx.scene.layout.HBox;
+import javafx.scene.control.DatePicker;
 
 public class MainController {
+    // FXML bindings
     @FXML private TableView<Transaction> transactionTable;
     @FXML private TableColumn<Transaction, String> titleColumn;
     @FXML private TableColumn<Transaction, Double> amountColumn;
     @FXML private TableColumn<Transaction, String> dateColumn;
     @FXML private TableColumn<Transaction, String> categoryColumn;
+    @FXML private TableColumn<Transaction, Void> actionColumn;
+
     @FXML private ComboBox<String> categoryComboBox;
     @FXML private TextField descriptionField;
     @FXML private TextField amountField;
+
     @FXML private Label allAccountsLabel;
     @FXML private Label incomeThisMonthLabel;
     @FXML private Label expensesThisMonthLabel;
-    @FXML private TableColumn<Transaction, Void> actionColumn;
 
+    // filter bar
+    @FXML private HBox filterBar;
+    @FXML private TextField descriptionFilter;
+    @FXML private DatePicker dateFilter;
+    @FXML private Button filterButton;
+    @FXML private Button clearButton;
 
+    private final ObservableList<Transaction> transactions = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
@@ -55,7 +64,6 @@ public class MainController {
         addDeleteButtonToTable();
 
         /* RESPONSYWNOŚĆ TABELI */
-
         titleColumn.prefWidthProperty().bind(transactionTable.widthProperty().multiply(0.30));
         amountColumn.prefWidthProperty().bind(transactionTable.widthProperty().multiply(0.20));
         dateColumn.prefWidthProperty().bind(transactionTable.widthProperty().multiply(0.20));
@@ -63,15 +71,13 @@ public class MainController {
         actionColumn.prefWidthProperty().bind(transactionTable.widthProperty().multiply(0.10));
 
         titleColumn.setStyle("-fx-alignment: CENTER;");
-        amountColumn.setStyle("-fx-alignment: CENTER;");      // lub CENTER-RIGHT dla liczb
+        amountColumn.setStyle("-fx-alignment: CENTER;"); // lub CENTER-RIGHT dla liczb
         dateColumn.setStyle("-fx-alignment: CENTER;");
         categoryColumn.setStyle("-fx-alignment: CENTER;");
         actionColumn.setStyle("-fx-alignment: CENTER;");
-
-
     }
 
-    public void createTableIfNotExists() {
+    private void createTableIfNotExists() {
         String sql = """
             CREATE TABLE IF NOT EXISTS transactions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -91,9 +97,8 @@ public class MainController {
     }
 
     public void loadTransactions() {
-        List<Transaction> transactions = getTransactions();
-        ObservableList<Transaction> data = FXCollections.observableArrayList(transactions);
-        transactionTable.setItems(data);
+        transactions.setAll(getTransactions());
+        transactionTable.setItems(transactions);
     }
 
     public void addTransaction(Transaction t) {
@@ -135,11 +140,12 @@ public class MainController {
 
         return list;
     }
+
     @FXML
     private void handleAddTransaction(ActionEvent event) {
         String description = descriptionField.getText();
-        String amountText = amountField.getText();
-        String category = categoryComboBox.getValue();
+        String amountText  = amountField.getText();
+        String category    = categoryComboBox.getValue();
 
         if (description.isEmpty() || amountText.isEmpty() || category == null) {
             System.out.println("Uzupełnij wszystkie pola!");
@@ -148,9 +154,9 @@ public class MainController {
 
         try {
             double amount = Double.parseDouble(amountText);
-            String date = java.time.LocalDate.now().toString();
+            String date   = LocalDate.now().toString();
 
-            Transaction t = new Transaction(description, amount, date, category); // Można dodać kategorię jeśli rozbudujesz klasę
+            Transaction t = new Transaction(description, amount, date, category);
             addTransaction(t);
             loadTransactions();
             updateSummaryLabels();
@@ -164,16 +170,17 @@ public class MainController {
             System.out.println("Nieprawidłowa kwota.");
         }
     }
+
     private void updateSummaryLabels() {
-        double totalIncome = 0;
-        double totalExpense = 0;
+        double totalIncome   = 0;
+        double totalExpense  = 0;
         double monthlyIncome = 0;
-        double monthlyExpense = 0;
+        double monthlyExpense= 0;
 
         YearMonth currentMonth = YearMonth.now();
         for (Transaction t : transactionTable.getItems()) {
-            double amount = t.getAmount();
-            LocalDate date = LocalDate.parse(t.getDate());  // konwersja String → LocalDate
+            double   amount = t.getAmount();
+            LocalDate date   = LocalDate.parse(t.getDate());
 
             if (amount > 0) {
                 totalIncome += amount;
@@ -194,6 +201,7 @@ public class MainController {
         incomeThisMonthLabel.setText(String.format("%.2f PLN", monthlyIncome));
         expensesThisMonthLabel.setText(String.format("%.2f PLN", monthlyExpense));
     }
+
     private void addDeleteButtonToTable() {
         actionColumn.setCellFactory(col -> new TableCell<>() {
             private final Button deleteButton = new Button("🗑");
@@ -202,22 +210,19 @@ public class MainController {
                 deleteButton.setOnAction(event -> {
                     Transaction transaction = getTableView().getItems().get(getIndex());
                     deleteTransaction(transaction);
-                    loadTransactions(); // odświeżenie tabeli
-                    updateSummaryLabels(); // odświeżenie sum
+                    loadTransactions();
+                    updateSummaryLabels();
                 });
             }
 
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(deleteButton);
-                }
+                setGraphic(empty ? null : deleteButton);
             }
         });
     }
+
     private void deleteTransaction(Transaction transaction) {
         String sql = "DELETE FROM transactions WHERE id = ?";
 
@@ -230,7 +235,20 @@ public class MainController {
         }
     }
 
+    // Filtrowanie
+    @FXML
+    private void onFilter(ActionEvent event) {
+        String   desc = descriptionFilter.getText().toLowerCase();
+        LocalDate date = dateFilter.getValue();
 
+        // TODO: zastosuj filtr na transactions i ustaw wynik w tabeli
+        System.out.println("Filter: desc=" + desc + ", date=" + date);
+    }
 
-
+    @FXML
+    private void onClear(ActionEvent event) {
+        descriptionFilter.clear();
+        dateFilter.setValue(null);
+        transactionTable.setItems(transactions); // pokazuje ponownie wszystkie transakcje
+    }
 }

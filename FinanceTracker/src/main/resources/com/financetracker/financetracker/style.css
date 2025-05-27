@@ -127,7 +127,6 @@ HBox > Label {
     -fx-font-size: 14px;
 }
 
-/* Responsive behavior fallback */
 .pane, .vbox, .hbox, .border-pane {
     -fx-pref-width: USE_COMPUTED_SIZE;
     -fx-pref-height: USE_COMPUTED_SIZE;
@@ -135,8 +134,54 @@ HBox > Label {
     -fx-min-height: 0;
 }
 
-/* Icon font fix */
 .font-icon,
 .sidebar-icon {
     -fx-font-family: "Material Design Icons";
 }
+
+/* --- filter Bar  --- */
+.filter-bar {
+    -fx-padding: 12 16;
+    -fx-background-color: #1f1f1f;
+}
+
+.filter-bar .label {
+    -fx-text-fill: #e0e0e0;
+    -fx-font-size: 13px;
+}
+
+.filter-bar .text-field,
+.filter-bar .date-picker {
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: #ffffff;
+    -fx-prompt-text-fill: #888888;
+    -fx-border-color: #444444;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-pref-width: 140px;
+}
+
+.filter-bar .date-picker .arrow-button,
+.filter-bar .date-picker .text-field {
+    -fx-background-color: #2b2b2b;
+}
+
+.filter-bar #filterButton {
+    -fx-background-color: #f57c00;
+    -fx-text-fill: white;
+    -fx-background-radius: 4;
+    -fx-padding: 8 16;
+}
+
+.filter-bar #clearButton {
+    -fx-background-color: #424242;
+    -fx-text-fill: white;
+    -fx-background-radius: 4;
+    -fx-padding: 8 16;
+}
+
+.filter-bar Button:hover {
+    -fx-opacity: 0.85;
+}
+
+
