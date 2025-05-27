@@ -238,11 +238,16 @@ public class MainController {
     // Filtrowanie
     @FXML
     private void onFilter(ActionEvent event) {
-        String   desc = descriptionFilter.getText().toLowerCase();
+        String desc = descriptionFilter.getText().toLowerCase().trim();
         LocalDate date = dateFilter.getValue();
 
-        // TODO: zastosuj filtr na transactions i ustaw wynik w tabeli
-        System.out.println("Filter: desc=" + desc + ", date=" + date);
+        ObservableList<Transaction> filtered = transactions.filtered(tx -> {
+            boolean matchesDesc = desc.isEmpty() || tx.getTitle().toLowerCase().contains(desc);
+            boolean matchesDate = date == null || tx.getDate().equals(date.toString());
+            return matchesDesc && matchesDate;
+        });
+
+        transactionTable.setItems(filtered);
     }
 
     @FXML
