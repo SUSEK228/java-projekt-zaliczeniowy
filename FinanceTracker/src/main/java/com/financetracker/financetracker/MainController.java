@@ -54,6 +54,20 @@ public class MainController {
         updateSummaryLabels();
         addDeleteButtonToTable();
 
+        /* RESPONSYWNOŚĆ TABELI */
+
+        titleColumn.prefWidthProperty().bind(transactionTable.widthProperty().multiply(0.30));
+        amountColumn.prefWidthProperty().bind(transactionTable.widthProperty().multiply(0.20));
+        dateColumn.prefWidthProperty().bind(transactionTable.widthProperty().multiply(0.20));
+        categoryColumn.prefWidthProperty().bind(transactionTable.widthProperty().multiply(0.20));
+        actionColumn.prefWidthProperty().bind(transactionTable.widthProperty().multiply(0.10));
+
+        titleColumn.setStyle("-fx-alignment: CENTER;");
+        amountColumn.setStyle("-fx-alignment: CENTER;");      // lub CENTER-RIGHT dla liczb
+        dateColumn.setStyle("-fx-alignment: CENTER;");
+        categoryColumn.setStyle("-fx-alignment: CENTER;");
+        actionColumn.setStyle("-fx-alignment: CENTER;");
+
 
     }
 
