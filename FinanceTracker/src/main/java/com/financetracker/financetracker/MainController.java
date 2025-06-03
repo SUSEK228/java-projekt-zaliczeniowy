@@ -19,6 +19,9 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.layout.VBox;
+import java.util.Map;
+import java.util.HashMap;
 
 public class MainController {
     // FXML bindings
@@ -43,6 +46,17 @@ public class MainController {
     @FXML private DatePicker dateFilter;
     @FXML private Button filterButton;
     @FXML private Button clearButton;
+    @FXML private VBox limitSettingsBox;
+    @FXML private TextField limitAmountField;
+    @FXML private ComboBox<String> limitPeriodComboBox;
+    @FXML private VBox mainContentBox;
+    @FXML private VBox statsBox;
+    @FXML private Label statsBalance;
+    @FXML private Label statsIncome;
+    @FXML private Label statsExpenses;
+    @FXML private Label statsCount;
+    @FXML private VBox categoryStatsBox;
+
 
     private final ObservableList<Transaction> transactions = FXCollections.observableArrayList();
 
@@ -157,6 +171,13 @@ public class MainController {
             String date   = LocalDate.now().toString();
 
             Transaction t = new Transaction(description, amount, date, category);
+
+            // 🔒 SPRAWDZENIE LIMITU
+            if (Database.isLimitExceeded(t)) {
+                showAlert("Limit przekroczony", "Nie możesz dodać więcej transakcji w tym okresie.");
+                return;
+            }
+
             addTransaction(t);
             loadTransactions();
             updateSummaryLabels();
@@ -170,6 +191,7 @@ public class MainController {
             System.out.println("Nieprawidłowa kwota.");
         }
     }
+
 
     private void updateSummaryLabels() {
         double totalIncome   = 0;
@@ -256,4 +278,72 @@ public class MainController {
         dateFilter.setValue(null);
         transactionTable.setItems(transactions); // pokazuje ponownie wszystkie transakcje
     }
+    @FXML
+    private void handleSaveLimit() {
+        try {
+            double amount = Double.parseDouble(limitAmountField.getText());
+            String period = limitPeriodComboBox.getValue();
+            Database.setLimit(amount, period);
+            showAlert("Zapisano", "Limit został zapisany.");
+        } catch (NumberFormatException e) {
+            showAlert("Błąd", "Nieprawidłowa kwota.");
+        }
+    }
+    @FXML
+    private void showLimitSettings() {
+        mainContentBox.setVisible(false);
+        statsBox.setVisible(false);
+        limitSettingsBox.setVisible(true);
+    }
+
+
+    private void showAlert(String title, String message) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    @FXML
+    private void handleReturnToMain() {
+        mainContentBox.setVisible(true);
+        limitSettingsBox.setVisible(false);
+        statsBox.setVisible(false);
+    }
+    @FXML
+    private void showStats() {
+        mainContentBox.setVisible(false);
+        limitSettingsBox.setVisible(false);
+        statsBox.setVisible(true);
+
+        List<Transaction> list = getTransactions();
+        double income = 0, expenses = 0;
+        int total = list.size();
+        Map<String, Double> categoryMap = new HashMap<>();
+
+        for (Transaction t : list) {
+            double amt = t.getAmount();
+            if (amt > 0) income += amt;
+            else expenses += Math.abs(amt);
+
+            if (amt < 0) {
+                categoryMap.merge(t.getCategory(), Math.abs(amt), Double::sum);
+            }
+        }
+
+        double balance = income - expenses;
+
+        statsBalance.setText("Bilans: " + String.format("%.2f PLN", balance));
+        statsIncome.setText("Suma przychodów: " + String.format("%.2f PLN", income));
+        statsExpenses.setText("Suma wydatków: " + String.format("%.2f PLN", expenses));
+        statsCount.setText("Liczba transakcji: " + total);
+
+        categoryStatsBox.getChildren().clear();
+        for (Map.Entry<String, Double> entry : categoryMap.entrySet()) {
+            Label lbl = new Label(entry.getKey() + ": " + String.format("%.2f PLN", entry.getValue()));
+            categoryStatsBox.getChildren().add(lbl);
+        }
+    }
+
+
 }

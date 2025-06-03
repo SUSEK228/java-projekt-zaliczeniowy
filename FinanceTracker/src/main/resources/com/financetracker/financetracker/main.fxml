@@ -3,6 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml"
@@ -22,22 +24,17 @@
     <!-- SIDEBAR -->
     <left>
         <VBox styleClass="sidebar" alignment="TOP_CENTER" spacing="20">
-            <Button styleClass="sidebar-button">
+            <Button styleClass="sidebar-button" onAction="#handleReturnToMain">
                 <graphic>
                     <FontIcon iconLiteral="mdi2h-home" styleClass="sidebar-icon"/>
                 </graphic>
             </Button>
-            <Button styleClass="sidebar-button">
-                <graphic>
-                    <FontIcon iconLiteral="mdi2c-cash" styleClass="sidebar-icon"/>
-                </graphic>
-            </Button>
-            <Button styleClass="sidebar-button">
+            <Button styleClass="sidebar-button" onAction="#showStats">
                 <graphic>
                     <FontIcon iconLiteral="mdi2c-chart-bar" styleClass="sidebar-icon"/>
                 </graphic>
             </Button>
-            <Button styleClass="sidebar-button">
+            <Button styleClass="sidebar-button" onAction="#showLimitSettings">
                 <graphic>
                     <FontIcon iconLiteral="mdi2c-cog" styleClass="sidebar-icon"/>
                 </graphic>
@@ -47,63 +44,89 @@
 
     <!-- MAIN CONTENT -->
     <center>
-        <VBox spacing="20">
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
+        <StackPane>
 
-            <!-- Transaction Form -->
-            <HBox spacing="15" alignment="CENTER_LEFT">
-                <Label text="New Transaction:"/>
-                <TextField fx:id="descriptionField" promptText="Description"/>
-                <TextField fx:id="amountField" promptText="Amount"/>
-                <ComboBox fx:id="categoryComboBox" promptText="Category"/>
-                <Button text="Add" onAction="#handleAddTransaction"/>
-            </HBox>
+            <!-- Widok główny -->
+            <VBox fx:id="mainContentBox" spacing="20">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
 
-            <!-- Summary Cards -->
-            <HBox spacing="15">
-                <VBox styleClass="summary-card">
-                    <Label text="All Accounts (PLN)" styleClass="account-title"/>
-                    <Label fx:id="allAccountsLabel" text="0.00 PLN" styleClass="account-balance"/>
-                </VBox>
-                <VBox styleClass="summary-card">
-                    <Label text="Income This Month" styleClass="account-title"/>
-                    <Label fx:id="incomeThisMonthLabel" text="0.00 PLN" styleClass="account-balance"/>
-                </VBox>
-                <VBox styleClass="summary-card">
-                    <Label text="Expenses This Month" styleClass="account-title"/>
-                    <Label fx:id="expensesThisMonthLabel" text="0.00 PLN" styleClass="account-balance"/>
-                </VBox>
-            </HBox>
+                <!-- Formularz -->
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label text="New Transaction:"/>
+                    <TextField fx:id="descriptionField" promptText="Description"/>
+                    <TextField fx:id="amountField" promptText="Amount"/>
+                    <ComboBox fx:id="categoryComboBox" promptText="Category"/>
+                    <Button text="Add" onAction="#handleAddTransaction"/>
+                </HBox>
 
-            <!-- Recent Transactions -->
-            <TableView fx:id="transactionTable" styleClass="transaction-table" VBox.vgrow="ALWAYS">
-                <columns>
-                    <TableColumn fx:id="titleColumn" text="Title" prefWidth="200"/>
-                    <TableColumn fx:id="amountColumn" text="Amount" prefWidth="150"/>
-                    <TableColumn fx:id="dateColumn" text="Date" prefWidth="150"/>
-                    <TableColumn fx:id="categoryColumn" text="Category" prefWidth="150"/>
-                    <TableColumn fx:id="actionColumn" text="Usuń" prefWidth="80"/>
-                </columns>
-            </TableView>
+                <!-- Podsumowanie -->
+                <HBox spacing="15">
+                    <VBox styleClass="summary-card">
+                        <Label text="All Accounts (PLN)" styleClass="account-title"/>
+                        <Label fx:id="allAccountsLabel" text="0.00 PLN" styleClass="account-balance"/>
+                    </VBox>
+                    <VBox styleClass="summary-card">
+                        <Label text="Income This Month" styleClass="account-title"/>
+                        <Label fx:id="incomeThisMonthLabel" text="0.00 PLN" styleClass="account-balance"/>
+                    </VBox>
+                    <VBox styleClass="summary-card">
+                        <Label text="Expenses This Month" styleClass="account-title"/>
+                        <Label fx:id="expensesThisMonthLabel" text="0.00 PLN" styleClass="account-balance"/>
+                    </VBox>
+                </HBox>
 
+                <!-- Tabela transakcji -->
+                <TableView fx:id="transactionTable" styleClass="transaction-table" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="titleColumn" text="Title" prefWidth="200"/>
+                        <TableColumn fx:id="amountColumn" text="Amount" prefWidth="150"/>
+                        <TableColumn fx:id="dateColumn" text="Date" prefWidth="150"/>
+                        <TableColumn fx:id="categoryColumn" text="Category" prefWidth="150"/>
+                        <TableColumn fx:id="actionColumn" text="Usuń" prefWidth="80"/>
+                    </columns>
+                </TableView>
 
-            <!-- Filter  -->
+                <!-- Filtry -->
+                <HBox fx:id="filterBar" styleClass="filter-bar" spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Description filter:" />
+                    <TextField fx:id="descriptionFilter" promptText="Wpisz tekst..." />
+                    <Label text="Date filter:" />
+                    <DatePicker fx:id="dateFilter" promptText="Wybierz datę" />
+                    <Button fx:id="filterButton" text="Filter" onAction="#onFilter" />
+                    <Button fx:id="clearButton"  text="Clear"  onAction="#onClear" />
+                </HBox>
+            </VBox>
 
-            <HBox fx:id="filterBar" styleClass="filter-bar" spacing="8" alignment="CENTER_LEFT">
-                <Label text="Description filter:" />
-                <TextField fx:id="descriptionFilter" promptText="Wpisz tekst..." />
+            <!-- Panel ustawień limitów -->
+            <VBox fx:id="limitSettingsBox" spacing="10" alignment="CENTER" visible="false">
+                <Label text="Ustaw limit wydatków" />
+                <TextField fx:id="limitAmountField" promptText="Kwota (PLN)" />
+                <ComboBox fx:id="limitPeriodComboBox">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Dzienny" />
+                            <String fx:value="Tygodniowy" />
+                            <String fx:value="Miesięczny" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+                <Button text="Zapisz limit" onAction="#handleSaveLimit"/>
+                <Button text="Wróć" onAction="#handleReturnToMain"/>
+            </VBox>
 
-                <Label text="Date filter:" />
-                <DatePicker fx:id="dateFilter" promptText="Wybierz datę" />
+            <!-- Statystyki -->
+            <VBox fx:id="statsBox" spacing="15" alignment="CENTER" visible="false">
+                <Label fx:id="statsBalance"/>
+                <Label fx:id="statsIncome"/>
+                <Label fx:id="statsExpenses"/>
+                <Label fx:id="statsCount"/>
+                <VBox fx:id="categoryStatsBox" spacing="5"/>
+                <Button text="Wróć" onAction="#handleReturnToMain"/>
+            </VBox>
 
-                <Button fx:id="filterButton" text="Filter" onAction="#onFilter" />
-                <Button fx:id="clearButton"  text="Clear"  onAction="#onClear" />
-            </HBox>
-
-        </VBox>
+        </StackPane>
     </center>
-
 
 </BorderPane>
