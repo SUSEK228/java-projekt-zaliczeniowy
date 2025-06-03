@@ -8,9 +8,14 @@ import java.util.List;
 public class Database {
     private static final String URL = "jdbc:sqlite:transactions.db";
 
+    // Limit wydatków
     private static double limitAmount = 0;
     private static String limitPeriod = "Miesięczny";
 
+    // Lista testowa (do unit testów)
+    private static List<Transaction> testTransactions = null;
+
+    // Połączenie z bazą danych
     public static Connection connect() {
         try {
             return DriverManager.getConnection(URL);
@@ -20,15 +25,16 @@ public class Database {
         }
     }
 
+    // Ustawienie limitu
     public static void setLimit(double amount, String period) {
         limitAmount = amount;
         limitPeriod = period;
     }
 
+    // Sprawdzenie czy przekroczono limit wydatków
     public static boolean isLimitExceeded(Transaction newTrans) {
         if (newTrans.getAmount() >= 0) {
-            // Jeśli to nie jest wydatek, to limit nie dotyczy
-            return false;
+            return false; // tylko wydatki (ujemne kwoty)
         }
 
         LocalDate startDate = switch (limitPeriod) {
@@ -38,23 +44,26 @@ public class Database {
             default -> LocalDate.now();
         };
 
-        double wydatki = 0;
+        double spent = 0;
         for (Transaction t : getTransactions()) {
             try {
                 LocalDate txDate = LocalDate.parse(t.getDate());
                 if (!txDate.isBefore(startDate) && t.getAmount() < 0) {
-                    wydatki += Math.abs(t.getAmount()); // liczymy tylko wydatki
+                    spent += Math.abs(t.getAmount());
                 }
             } catch (Exception ignored) {}
         }
 
-        double nowyWydatek = Math.abs(newTrans.getAmount());
-
-        return (wydatki + nowyWydatek) > limitAmount;
+        double current = Math.abs(newTrans.getAmount());
+        return (spent + current) > limitAmount;
     }
 
-
+    // Pobieranie transakcji z bazy (lub danych testowych)
     public static List<Transaction> getTransactions() {
+        if (testTransactions != null) {
+            return testTransactions;
+        }
+
         List<Transaction> list = new ArrayList<>();
         String sql = "SELECT * FROM transactions";
 
@@ -78,5 +87,15 @@ public class Database {
         }
 
         return list;
+    }
+
+    // 👇 Wstrzyknięcie danych testowych (dla testów jednostkowych)
+    public static void injectTransactionList(List<Transaction> list) {
+        testTransactions = list;
+    }
+
+    // 👇 Wyczyszczenie danych testowych (np. w @AfterEach)
+    public static void clearInjectedTransactions() {
+        testTransactions = null;
     }
 }
