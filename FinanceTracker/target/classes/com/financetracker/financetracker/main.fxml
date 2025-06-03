@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import javafx.geometry.Insets?>
-<?import javafx.collections.FXCollections?>
+<?import javafx.collections.*?>
 <?import java.lang.String?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17"
@@ -100,10 +100,15 @@
             </VBox>
 
             <!-- Panel ustawień limitów -->
-            <VBox fx:id="limitSettingsBox" spacing="10" alignment="CENTER" visible="false">
-                <Label text="Ustaw limit wydatków" />
-                <TextField fx:id="limitAmountField" promptText="Kwota (PLN)" />
-                <ComboBox fx:id="limitPeriodComboBox">
+            <VBox fx:id="limitSettingsBox" spacing="10" alignment="CENTER" visible="false"
+                  styleClass="limit-settings">
+                <Label text="Ustaw limit wydatków"
+                       styleClass="limit-title"/>
+                <TextField fx:id="limitAmountField"
+                           promptText="Kwota (PLN)"
+                           styleClass="limit-input"/>
+                <ComboBox fx:id="limitPeriodComboBox"
+                          styleClass="limit-input">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
                             <String fx:value="Dzienny" />
@@ -112,8 +117,14 @@
                         </FXCollections>
                     </items>
                 </ComboBox>
-                <Button text="Zapisz limit" onAction="#handleSaveLimit"/>
-                <Button text="Wróć" onAction="#handleReturnToMain"/>
+                <HBox spacing="10" alignment="CENTER">
+                    <Button text="Zapisz limit"
+                            onAction="#handleSaveLimit"
+                            styleClass="limit-button"/>
+                    <Button text="Wróć"
+                            onAction="#handleReturnToMain"
+                            styleClass="limit-button-secondary"/>
+                </HBox>
             </VBox>
 
             <!-- Statystyki -->
