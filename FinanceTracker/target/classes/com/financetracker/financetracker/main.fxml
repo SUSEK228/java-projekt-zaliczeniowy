@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import javafx.geometry.Insets?>
-<?import javafx.collections.*?>
+<?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17"
@@ -99,6 +99,7 @@
                 </HBox>
             </VBox>
 
+            <!-- Panel ustawień limitów -->
             <!-- Panel ustawień limitów -->
             <VBox fx:id="limitSettingsBox" spacing="10" alignment="CENTER" visible="false"
                   styleClass="limit-settings">

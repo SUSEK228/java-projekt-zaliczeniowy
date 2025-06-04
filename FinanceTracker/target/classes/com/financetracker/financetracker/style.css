@@ -194,6 +194,7 @@ HBox > Label {
     );
     -fx-min-width: 300;
     -fx-max-width: 400;
+    -fx-min-height: 300;
     -fx-max-height: 400;
 }
 
@@ -204,7 +205,7 @@ HBox > Label {
 }
 
 .limit-settings .limit-input {
-    -fx-background-color: #444444;
+    -fx-background-color: #2b2b2b;
     -fx-text-fill: #ffffff;
     -fx-prompt-text-fill: #888888;
     -fx-border-color: #444444;
@@ -215,26 +216,6 @@ HBox > Label {
     -fx-padding: 6 10;
 }
 
-.limit-settings .limit-input .label {
-    -fx-text-fill: #FFFFFF;
-}
-
-.limit-settings .limit-input .list-cell {
-    -fx-text-fill: #FFFFFF;
-    -fx-background-color: #444444;
-}
-
-.limit-settings .limit-input .list-view {
-    -fx-background-color: #444444;
-}
-
-.limit-settings .limit-input .list-cell:hover {
-    -fx-background-color: #444444;
-}
-
-.limit-settings .limit-input .arrow-button {
-    -fx-background-color: transparent;
-}
 .limit-settings .limit-button {
     -fx-background-color: linear-gradient(to right, #FF8800, #FFA552);
     -fx-text-fill: #ffffff;
@@ -246,11 +227,6 @@ HBox > Label {
             gaussian, rgba(0,0,0,0.2), 6, 0.2, 0, 1
     );
 }
-
-.limit-settings .limitAmountField {
-    -fx-prompt-text-fill: #ffffff;
-}
-
 .limit-settings .limit-button:hover {
     -fx-background-color: #B34E00;
 }
@@ -275,5 +251,23 @@ HBox > Label {
     -fx-alignment: CENTER;
 }
 
+.limit-settings .limit-input .label {
+    -fx-text-fill: #FFFFFF;
+}
 
+.limit-settings .limit-input .list-cell {
+    -fx-text-fill: #FFFFFF;
+    -fx-background-color: #2b2b2b;
+}
 
+.limit-settings .limit-input .list-view {
+    -fx-background-color: #2b2b2b;
+}
+
+.limit-settings .limit-input .list-cell:hover {
+    -fx-background-color: #3c3c3c;
+}
+
+.limit-settings .limit-input .arrow-button {
+    -fx-background-color: transparent;
+}
