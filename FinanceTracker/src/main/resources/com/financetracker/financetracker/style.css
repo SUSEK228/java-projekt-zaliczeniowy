@@ -271,3 +271,151 @@ HBox > Label {
 .limit-settings .limit-input .arrow-button {
     -fx-background-color: transparent;
 }
+
+/* --- Stats Card (sekcja Statystyk) --- */
+.stats-card {
+    -fx-background-color: #272727;               /* to samo tło co w .summary-card */
+    -fx-background-radius: 12;                   /* zaokrąglone rogi */
+    -fx-padding: 20;                             /* odstęp od krawędzi */
+    -fx-spacing: 10;                             /* odstęp pomiędzy węzłami wewnątrz */
+    -fx-alignment: CENTER;                       /* wyśrodkuj zawartość */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 12, 0.4, 0, 2); /* lekki cień */
+    -fx-min-width: 300;                          /* minimalna szerokość */
+    -fx-max-width: 400;                          /* maksymalna szerokość */
+}
+
+.stats-card .stats-balance {
+    -fx-text-fill: white;                        /* biały tekst */
+    -fx-font-size: 24px;                         /* większa czcionka dla bilansu */
+    -fx-font-weight: bold;                       /* pogrubienie */
+}
+
+.stats-card .stats-text {
+    -fx-text-fill: white;                        /* biały tekst */
+    -fx-font-size: 16px;                         /* standardowa czcionka */
+}
+
+.category-stats-box {
+    -fx-background-color: transparent;           /* przejrzyste tło (dziedziczy z .stats-card) */
+    -fx-padding: 0 0 0 0;                        /* brak dodatkowych wypełnień */
+    -fx-spacing: 5;                              /* odstęp pomiędzy etykietami w kategorii */
+}
+
+.category-stats-box Label {
+    -fx-text-fill: #FFA552;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.limit-button-secondary {
+    -fx-background-color: #424242;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0.2, 0, 1);
+}
+.limit-button-secondary:hover {
+    -fx-opacity: 0.85;
+}
+
+.stats-card {
+    -fx-background-color: #272727;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 10, 0.35, 0, 3);
+    -fx-min-width: 440;
+    -fx-pref-width: 480;
+    -fx-max-width: 800;
+    -fx-padding: 35;
+    -fx-spacing: 20;
+    -fx-alignment: TOP_CENTER;
+}
+
+.stats-title {
+    -fx-text-fill: #FFA552;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 0 0 0;
+}
+
+.stats-balance {
+    -fx-text-fill: white;
+    -fx-font-size: 34px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 0 14 0;
+}
+
+.stats-column {
+    -fx-pref-width: 200;
+    -fx-alignment: TOP_CENTER;
+}
+
+.stats-small-title {
+    -fx-text-fill: #e0e0e0;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-wrap-text: true;
+    -fx-text-overrun: clip;
+    -fx-text-alignment: CENTER;
+    -fx-label-padding: 0 6 0 6;
+}
+
+.stats-small-text {
+    -fx-text-fill: white;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-wrap-text: true;
+    -fx-text-overrun: clip;
+    -fx-text-alignment: CENTER;
+    -fx-padding: 4 6 0 6;
+}
+
+.pie-chart {
+    -fx-background-color: transparent;
+    -fx-pie-label-visible: true;
+    -fx-pie-label-line-length: 10;
+    -fx-pref-width: 240;
+    -fx-pref-height: 240;
+    -fx-padding: 10 0 25 0;
+}
+
+.category-stats-box {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-spacing: 6;
+}
+
+.category-stats-box Label {
+    -fx-text-fill: #FFA552;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 2, 0.6, 0, 0);
+}
+
+.limit-button-secondary {
+    -fx-background-color: #4A4A4A;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 9 18;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0.25, 0, 2);
+}
+
+.limit-button-secondary:hover {
+    -fx-opacity: 0.88;
+}
+
+.chart-pie-label {
+    -fx-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+}
+
+.chart-pie-label-line {
+    -fx-stroke: #ffffff;
+}
+
+
+

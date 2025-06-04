@@ -22,6 +22,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.layout.VBox;
 import java.util.Map;
 import java.util.HashMap;
+import javafx.scene.chart.PieChart;
+
 
 public class MainController {
     // FXML bindings
@@ -56,6 +58,8 @@ public class MainController {
     @FXML private Label statsExpenses;
     @FXML private Label statsCount;
     @FXML private VBox categoryStatsBox;
+
+    @FXML private PieChart expensePieChart;
 
 
     private final ObservableList<Transaction> transactions = FXCollections.observableArrayList();
@@ -310,6 +314,7 @@ public class MainController {
         limitSettingsBox.setVisible(false);
         statsBox.setVisible(false);
     }
+
     @FXML
     private void showStats() {
         mainContentBox.setVisible(false);
@@ -324,25 +329,33 @@ public class MainController {
         for (Transaction t : list) {
             double amt = t.getAmount();
             if (amt > 0) income += amt;
-            else expenses += Math.abs(amt);
+            else  expenses += Math.abs(amt);
 
-            if (amt < 0) {
-                categoryMap.merge(t.getCategory(), Math.abs(amt), Double::sum);
+            if (amt < 0) {                              // tylko wydatki do wykresu
+                categoryMap.merge(t.getCategory(),
+                        Math.abs(amt),
+                        Double::sum);
             }
         }
 
         double balance = income - expenses;
 
-        statsBalance.setText("Bilans: " + String.format("%.2f PLN", balance));
-        statsIncome.setText("Suma przychodów: " + String.format("%.2f PLN", income));
-        statsExpenses.setText("Suma wydatków: " + String.format("%.2f PLN", expenses));
-        statsCount.setText("Liczba transakcji: " + total);
+        statsBalance.setText(String.format("Bilans: %.2f PLN", balance));
+        statsIncome.setText(String.format("Suma przychodów: %.2f PLN", income));
+        statsExpenses.setText(String.format("Suma wydatków: %.2f PLN", expenses));
+        statsCount.setText(String.format("Liczba transakcji: %d", total));
 
+        /* ----------  PieChart  ---------- */
+        ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
+        categoryMap.forEach((cat, val) -> pieData.add(new PieChart.Data(cat, val)));
+        expensePieChart.setData(pieData);                      // przypięcie danych
+
+        /* ----------  Lista kategorii obok  ---------- */
         categoryStatsBox.getChildren().clear();
-        for (Map.Entry<String, Double> entry : categoryMap.entrySet()) {
-            Label lbl = new Label(entry.getKey() + ": " + String.format("%.2f PLN", entry.getValue()));
-            categoryStatsBox.getChildren().add(lbl);
-        }
+        pieData.forEach(d -> {
+            String text = String.format("%s: %.2f PLN", d.getName(), d.getPieValue());
+            categoryStatsBox.getChildren().add(new Label(text));
+        });
     }
 
 
