@@ -331,7 +331,7 @@ HBox > Label {
     -fx-min-width: 440;
     -fx-pref-width: 480;
     -fx-max-width: 800;
-    -fx-max-height: 500;
+    -fx-max-height: 600;
     -fx-padding: 35;
     -fx-spacing: 20;
     -fx-alignment: TOP_CENTER;
