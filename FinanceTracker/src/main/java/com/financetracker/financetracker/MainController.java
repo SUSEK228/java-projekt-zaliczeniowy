@@ -10,23 +10,25 @@ import javafx.event.ActionEvent;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import javafx.scene.control.TableCell;
-import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.layout.VBox;
 import java.util.Map;
 import java.util.HashMap;
 import javafx.scene.chart.PieChart;
 
-
+/**
+ * Kontroler głównego widoku aplikacji Finance Tracker.
+ * Obsługuje logikę związaną z: dodawaniem transakcji, tabelą, filtrowaniem, widokiem limitów i statystyk.
+ */
 public class MainController {
-    // FXML bindings
+
+    // === FXML powiązania ===
+
+    // Tabela transakcji i kolumny
     @FXML private TableView<Transaction> transactionTable;
     @FXML private TableColumn<Transaction, String> titleColumn;
     @FXML private TableColumn<Transaction, Double> amountColumn;
@@ -34,45 +36,58 @@ public class MainController {
     @FXML private TableColumn<Transaction, String> categoryColumn;
     @FXML private TableColumn<Transaction, Void> actionColumn;
 
+    // Formularz dodawania transakcji
     @FXML private ComboBox<String> categoryComboBox;
     @FXML private TextField descriptionField;
     @FXML private TextField amountField;
 
+    // Etykiety podsumowania
     @FXML private Label allAccountsLabel;
     @FXML private Label incomeThisMonthLabel;
     @FXML private Label expensesThisMonthLabel;
 
-    // filter bar
+    // Pasek filtrów
     @FXML private HBox filterBar;
     @FXML private TextField descriptionFilter;
     @FXML private DatePicker dateFilter;
     @FXML private Button filterButton;
     @FXML private Button clearButton;
+
+    // Widok limitów
     @FXML private VBox limitSettingsBox;
     @FXML private TextField limitAmountField;
     @FXML private ComboBox<String> limitPeriodComboBox;
+
+    // Widoki główne
     @FXML private VBox mainContentBox;
     @FXML private VBox statsBox;
+
+    // Statystyki
     @FXML private Label statsBalance;
     @FXML private Label statsIncome;
     @FXML private Label statsExpenses;
     @FXML private Label statsCount;
     @FXML private VBox categoryStatsBox;
-
     @FXML private PieChart expensePieChart;
 
-
+    // Dane transakcji
     private final ObservableList<Transaction> transactions = FXCollections.observableArrayList();
 
+    /**
+     * Inicjalizacja kontrolera — wywoływana automatycznie po załadowaniu FXML.
+     * Konfiguruje tabele, ładuje dane i ustawia responsywność kolumn.
+     */
     @FXML
     public void initialize() {
         createTableIfNotExists();
 
+        // Powiązania kolumn z polami obiektu Transaction
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         amountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
 
+        // Kategorie w ComboBox
         categoryComboBox.setItems(FXCollections.observableArrayList(
                 "Jedzenie", "Transport", "Rozrywka", "Zdrowie", "Inne"
         ));
@@ -81,20 +96,24 @@ public class MainController {
         updateSummaryLabels();
         addDeleteButtonToTable();
 
-        /* RESPONSYWNOŚĆ TABELI */
+        // Ustawienie dynamicznej szerokości kolumn
         titleColumn.prefWidthProperty().bind(transactionTable.widthProperty().multiply(0.30));
         amountColumn.prefWidthProperty().bind(transactionTable.widthProperty().multiply(0.20));
         dateColumn.prefWidthProperty().bind(transactionTable.widthProperty().multiply(0.20));
         categoryColumn.prefWidthProperty().bind(transactionTable.widthProperty().multiply(0.20));
         actionColumn.prefWidthProperty().bind(transactionTable.widthProperty().multiply(0.10));
 
+        // Wyrównanie zawartości w kolumnach
         titleColumn.setStyle("-fx-alignment: CENTER;");
-        amountColumn.setStyle("-fx-alignment: CENTER;"); // lub CENTER-RIGHT dla liczb
+        amountColumn.setStyle("-fx-alignment: CENTER;");
         dateColumn.setStyle("-fx-alignment: CENTER;");
         categoryColumn.setStyle("-fx-alignment: CENTER;");
         actionColumn.setStyle("-fx-alignment: CENTER;");
     }
 
+    /**
+     * Tworzy tabelę SQL `transactions`, jeśli jeszcze nie istnieje.
+     */
     private void createTableIfNotExists() {
         String sql = """
             CREATE TABLE IF NOT EXISTS transactions (
@@ -114,11 +133,17 @@ public class MainController {
         }
     }
 
+    /**
+     * Wczytuje transakcje z bazy danych i przypisuje do tabeli.
+     */
     public void loadTransactions() {
         transactions.setAll(getTransactions());
         transactionTable.setItems(transactions);
     }
 
+    /**
+     * Dodaje nową transakcję do bazy danych.
+     */
     public void addTransaction(Transaction t) {
         String sql = "INSERT INTO transactions(title, amount, date, category) VALUES (?, ?, ?, ?)";
 
@@ -134,6 +159,9 @@ public class MainController {
         }
     }
 
+    /**
+     * Pobiera wszystkie transakcje z bazy danych.
+     */
     public List<Transaction> getTransactions() {
         List<Transaction> list = new ArrayList<>();
         String sql = "SELECT * FROM transactions";
@@ -159,6 +187,10 @@ public class MainController {
         return list;
     }
 
+    /**
+     * Obsługuje przycisk dodawania transakcji.
+     * Waliduje dane, sprawdza limity i aktualizuje UI.
+     */
     @FXML
     private void handleAddTransaction(ActionEvent event) {
         String description = descriptionField.getText();
@@ -176,7 +208,7 @@ public class MainController {
 
             Transaction t = new Transaction(description, amount, date, category);
 
-            // 🔒 SPRAWDZENIE LIMITU
+            // Sprawdzenie przekroczenia limitu
             if (Database.isLimitExceeded(t)) {
                 showAlert("Limit przekroczony", "Nie możesz dodać więcej transakcji w tym okresie.");
                 return;
@@ -186,7 +218,7 @@ public class MainController {
             loadTransactions();
             updateSummaryLabels();
 
-            // wyczyść formularz
+            // Czyszczenie pól formularza
             descriptionField.clear();
             amountField.clear();
             categoryComboBox.getSelectionModel().clearSelection();
@@ -196,17 +228,19 @@ public class MainController {
         }
     }
 
-
+    /**
+     * Aktualizuje etykiety z podsumowaniem (saldo, przychody, wydatki).
+     */
     private void updateSummaryLabels() {
-        double totalIncome   = 0;
-        double totalExpense  = 0;
+        double totalIncome = 0;
+        double totalExpense = 0;
         double monthlyIncome = 0;
-        double monthlyExpense= 0;
-
+        double monthlyExpense = 0;
         YearMonth currentMonth = YearMonth.now();
+
         for (Transaction t : transactionTable.getItems()) {
-            double   amount = t.getAmount();
-            LocalDate date   = LocalDate.parse(t.getDate());
+            double amount = t.getAmount();
+            LocalDate date = LocalDate.parse(t.getDate());
 
             if (amount > 0) {
                 totalIncome += amount;
@@ -222,12 +256,14 @@ public class MainController {
         }
 
         double balance = totalIncome - totalExpense;
-
         allAccountsLabel.setText(String.format("%.2f PLN", balance));
         incomeThisMonthLabel.setText(String.format("%.2f PLN", monthlyIncome));
         expensesThisMonthLabel.setText(String.format("%.2f PLN", monthlyExpense));
     }
 
+    /**
+     * Dodaje przyciski usuwania do każdej transakcji w tabeli.
+     */
     private void addDeleteButtonToTable() {
         actionColumn.setCellFactory(col -> new TableCell<>() {
             private final Button deleteButton = new Button("🗑");
@@ -249,6 +285,9 @@ public class MainController {
         });
     }
 
+    /**
+     * Usuwa transakcję z bazy danych.
+     */
     private void deleteTransaction(Transaction transaction) {
         String sql = "DELETE FROM transactions WHERE id = ?";
 
@@ -261,7 +300,9 @@ public class MainController {
         }
     }
 
-    // Filtrowanie
+    /**
+     * Filtruje transakcje wg opisu i daty.
+     */
     @FXML
     private void onFilter(ActionEvent event) {
         String desc = descriptionFilter.getText().toLowerCase().trim();
@@ -276,12 +317,19 @@ public class MainController {
         transactionTable.setItems(filtered);
     }
 
+    /**
+     * Czyści filtry i przywraca pełną listę transakcji.
+     */
     @FXML
     private void onClear(ActionEvent event) {
         descriptionFilter.clear();
         dateFilter.setValue(null);
-        transactionTable.setItems(transactions); // pokazuje ponownie wszystkie transakcje
+        transactionTable.setItems(transactions);
     }
+
+    /**
+     * Zapisuje nowy limit wydatków do bazy.
+     */
     @FXML
     private void handleSaveLimit() {
         try {
@@ -293,6 +341,10 @@ public class MainController {
             showAlert("Błąd", "Nieprawidłowa kwota.");
         }
     }
+
+    /**
+     * Pokazuje widok ustawień limitów.
+     */
     @FXML
     private void showLimitSettings() {
         mainContentBox.setVisible(false);
@@ -300,14 +352,20 @@ public class MainController {
         limitSettingsBox.setVisible(true);
     }
 
-
+    /**
+     * Pokazuje okno informacyjne.
+     */
     private void showAlert(String title, String message) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    /**
+     * Powrót do głównego widoku (formularz + tabela).
+     */
     @FXML
     private void handleReturnToMain() {
         mainContentBox.setVisible(true);
@@ -315,6 +373,9 @@ public class MainController {
         statsBox.setVisible(false);
     }
 
+    /**
+     * Wyświetla statystyki, dane sumaryczne i wykres wydatków.
+     */
     @FXML
     private void showStats() {
         mainContentBox.setVisible(false);
@@ -329,34 +390,29 @@ public class MainController {
         for (Transaction t : list) {
             double amt = t.getAmount();
             if (amt > 0) income += amt;
-            else  expenses += Math.abs(amt);
+            else expenses += Math.abs(amt);
 
-            if (amt < 0) {                              // tylko wydatki do wykresu
-                categoryMap.merge(t.getCategory(),
-                        Math.abs(amt),
-                        Double::sum);
+            if (amt < 0) {
+                categoryMap.merge(t.getCategory(), Math.abs(amt), Double::sum);
             }
         }
 
         double balance = income - expenses;
-
         statsBalance.setText(String.format("Bilans: %.2f PLN", balance));
         statsIncome.setText(String.format("Suma przychodów: %.2f PLN", income));
         statsExpenses.setText(String.format("Suma wydatków: %.2f PLN", expenses));
         statsCount.setText(String.format("Liczba transakcji: %d", total));
 
-        /* ----------  PieChart  ---------- */
+        // Wykres kołowy
         ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
         categoryMap.forEach((cat, val) -> pieData.add(new PieChart.Data(cat, val)));
-        expensePieChart.setData(pieData);                      // przypięcie danych
+        expensePieChart.setData(pieData);
 
-        /* ----------  Lista kategorii obok  ---------- */
+        // Lista kategorii obok wykresu
         categoryStatsBox.getChildren().clear();
         pieData.forEach(d -> {
             String text = String.format("%s: %.2f PLN", d.getName(), d.getPieValue());
             categoryStatsBox.getChildren().add(new Label(text));
         });
     }
-
-
 }

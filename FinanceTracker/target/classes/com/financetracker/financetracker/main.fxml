@@ -7,34 +7,45 @@
 <?import java.lang.String?>
 <?import javafx.scene.chart.PieChart?>
 
+<!--
+    GŁÓWNY UKŁAD APLIKACJI Finance Tracker
+    Używa BorderPane z podziałem na: top (pasek nagłówka), left (nawigacja), center (dynamiczna treść)
+-->
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.financetracker.financetracker.MainController"
             stylesheets="@style.css">
 
-    <!-- TOP BAR -->
+    <!-- === GÓRNY PASEK APLIKACJI === -->
     <top>
+        <!-- Pasek nagłówka z nazwą aplikacji i datą -->
         <HBox styleClass="top-bar" spacing="10">
-            <Label text="💰 Finance Tracker"/>
+            <Label text="💰 Finance Tracker"/> <!-- Nazwa aplikacji -->
+            <Region HBox.hgrow="ALWAYS"/>      <!-- Puste przestrzenie dla wyrównania -->
             <Region HBox.hgrow="ALWAYS"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Label fx:id="dateLabel"/>
+            <Label fx:id="dateLabel"/>         <!-- Dynamiczna data -->
         </HBox>
     </top>
 
-    <!-- SIDEBAR -->
+    <!-- === PANEL NAWIGACJI (sidebar) === -->
     <left>
+        <!-- Pasek boczny z przyciskami ikon do przełączania widoków -->
         <VBox styleClass="sidebar" alignment="TOP_CENTER" spacing="20">
+            <!-- Przycisk: Strona główna -->
             <Button styleClass="sidebar-button" onAction="#handleReturnToMain">
                 <graphic>
                     <FontIcon iconLiteral="mdi2h-home" styleClass="sidebar-icon"/>
                 </graphic>
             </Button>
+
+            <!-- Przycisk: Statystyki -->
             <Button styleClass="sidebar-button" onAction="#showStats">
                 <graphic>
                     <FontIcon iconLiteral="mdi2c-chart-bar" styleClass="sidebar-icon"/>
                 </graphic>
             </Button>
+
+            <!-- Przycisk: Ustawienia limitów -->
             <Button styleClass="sidebar-button" onAction="#showLimitSettings">
                 <graphic>
                     <FontIcon iconLiteral="mdi2c-cog" styleClass="sidebar-icon"/>
@@ -43,17 +54,16 @@
         </VBox>
     </left>
 
-    <!-- MAIN CONTENT -->
+    <!-- === GŁÓWNY OBSZAR TREŚCI === -->
     <center>
         <StackPane>
-
-            <!-- Main view -->
+            <!-- Główny widok: dodawanie transakcji, podsumowania, tabela i filtry -->
             <VBox fx:id="mainContentBox" spacing="20">
                 <padding>
                     <Insets top="20" right="20" bottom="20" left="20"/>
                 </padding>
 
-                <!-- Form -->
+                <!-- Formularz dodawania nowej transakcji -->
                 <HBox spacing="15" alignment="CENTER_LEFT">
                     <Label text="New Transaction:"/>
                     <TextField fx:id="descriptionField" promptText="Description"/>
@@ -62,7 +72,7 @@
                     <Button text="Add" onAction="#handleAddTransaction"/>
                 </HBox>
 
-                <!-- Summary -->
+                <!-- Karty podsumowania finansów (saldo, przychody, wydatki) -->
                 <HBox spacing="15">
                     <VBox styleClass="summary-card">
                         <Label text="All Accounts (PLN)" styleClass="account-title"/>
@@ -78,7 +88,7 @@
                     </VBox>
                 </HBox>
 
-                <!-- Transactions table -->
+                <!-- Tabela z transakcjami -->
                 <TableView fx:id="transactionTable" styleClass="transaction-table" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="titleColumn" text="Title" prefWidth="200"/>
@@ -89,7 +99,7 @@
                     </columns>
                 </TableView>
 
-                <!-- Filters -->
+                <!-- Pasek filtrów do wyszukiwania transakcji -->
                 <HBox fx:id="filterBar" styleClass="filter-bar" spacing="8" alignment="CENTER_LEFT">
                     <Label text="Description filter:" />
                     <TextField fx:id="descriptionFilter" promptText="Enter text..." />
@@ -100,16 +110,12 @@
                 </HBox>
             </VBox>
 
-            <!-- Limit settings panel -->
+            <!-- Panel ustawień limitów (ukryty domyślnie) -->
             <VBox fx:id="limitSettingsBox" spacing="10" alignment="CENTER" visible="false"
                   styleClass="limit-settings">
-                <Label text="Set spending limit"
-                       styleClass="limit-title"/>
-                <TextField fx:id="limitAmountField"
-                           promptText="Amount (PLN)"
-                           styleClass="limit-input"/>
-                <ComboBox fx:id="limitPeriodComboBox"
-                          styleClass="limit-input">
+                <Label text="Set spending limit" styleClass="limit-title"/>
+                <TextField fx:id="limitAmountField" promptText="Amount (PLN)" styleClass="limit-input"/>
+                <ComboBox fx:id="limitPeriodComboBox" styleClass="limit-input">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
                             <String fx:value="Daily" />
@@ -119,27 +125,19 @@
                     </items>
                 </ComboBox>
                 <HBox spacing="10" alignment="CENTER">
-                    <Button text="Save limit"
-                            onAction="#handleSaveLimit"
-                            styleClass="limit-button"/>
-                    <Button text="Back"
-                            onAction="#handleReturnToMain"
-                            styleClass="limit-button-secondary"/>
+                    <Button text="Save limit" onAction="#handleSaveLimit" styleClass="limit-button"/>
+                    <Button text="Back" onAction="#handleReturnToMain" styleClass="limit-button-secondary"/>
                 </HBox>
             </VBox>
 
-            <!-- Statistics -->
-            <VBox fx:id="statsBox"
-                  visible="false"
-                  spacing="20"
-                  alignment="CENTER"
-                  styleClass="stats-card">
+            <!-- Panel statystyk (ukryty domyślnie) -->
+            <VBox fx:id="statsBox" visible="false" spacing="20" alignment="CENTER" styleClass="stats-card">
 
-                <!-- Header + balance -->
+                <!-- Nagłówek i saldo ogólne -->
                 <Label text="Statistics" styleClass="stats-title"/>
                 <Label fx:id="statsBalance" styleClass="stats-balance"/>
 
-                <!-- Income / Expenses / Count -->
+                <!-- Szybkie statystyki: przychody, wydatki, liczba transakcji -->
                 <HBox spacing="30" alignment="CENTER">
                     <VBox alignment="CENTER">
                         <Label text="Income" styleClass="stats-small-title"/>
@@ -155,20 +153,14 @@
                     </VBox>
                 </HBox>
 
-                <!-- Chart + categories -->
+                <!-- Wykres wydatków + lista kategorii -->
                 <HBox spacing="40" alignment="CENTER">
-                    <PieChart fx:id="expensePieChart"
-                              prefWidth="350"
-                              prefHeight="300"/>
-                    <VBox fx:id="categoryStatsBox"
-                          spacing="6"
-                          styleClass="category-stats-box"/>
+                    <PieChart fx:id="expensePieChart" prefWidth="350" prefHeight="300"/>
+                    <VBox fx:id="categoryStatsBox" spacing="6" styleClass="category-stats-box"/>
                 </HBox>
 
-                <!-- Back -->
-                <Button text="Back"
-                        onAction="#handleReturnToMain"
-                        styleClass="limit-button-secondary"/>
+                <!-- Przycisk powrotu -->
+                <Button text="Back" onAction="#handleReturnToMain" styleClass="limit-button-secondary"/>
             </VBox>
 
         </StackPane>

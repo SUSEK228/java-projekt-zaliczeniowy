@@ -1,4 +1,6 @@
-/* Global styling for controls */
+/* === Globalne style bazowe === */
+
+/* Czcionka dla głównych kontrolek */
 .root .label,
 .root .button,
 .root .text-field,
@@ -6,7 +8,7 @@
     -fx-font-family: "Segoe UI", sans-serif;
 }
 
-/* Root background and layout fallback */
+/* Styl bazowy okna aplikacji */
 .root {
     -fx-background-color: #171717;
     -fx-text-fill: white;
@@ -14,7 +16,7 @@
     -fx-min-height: 0;
 }
 
-/* Top bar */
+/* === Pasek górny === */
 .top-bar {
     -fx-background-color: #33302C;
     -fx-padding: 10 20 10 20;
@@ -23,7 +25,7 @@
     -fx-font-size: 16px;
 }
 
-/* New Transaction button in top bar */
+/* Przycisk "Nowa transakcja" */
 .top-bar .new-trans-button {
     -fx-background-color: linear-gradient(to right, #FF8800, #FFA552);
     -fx-text-fill: white;
@@ -37,7 +39,7 @@
     -fx-background-color: #B34E00;
 }
 
-/* Sidebar */
+/* === Pasek boczny === */
 .sidebar {
     -fx-background-color: #1a1a1a;
     -fx-pref-width: 80;
@@ -47,6 +49,7 @@
     -fx-alignment: TOP_CENTER;
 }
 
+/* Przycisk w pasku bocznym */
 .sidebar-button {
     -fx-background-color: transparent;
     -fx-cursor: hand;
@@ -54,11 +57,13 @@
     -fx-transition: all 0.2s ease-in-out;
 }
 
+/* Ikony w pasku bocznym */
 .sidebar-button .sidebar-icon {
     -fx-icon-color: #FFA552;
     -fx-icon-size: 24px;
 }
 
+/* Efekty najechania i aktywacji */
 .sidebar-button:hover .sidebar-icon,
 .sidebar-button:selected .sidebar-icon {
     -fx-icon-color: #FF8800;
@@ -66,7 +71,7 @@
     -fx-scale-y: 1.1;
 }
 
-/* Summary card */
+/* === Karta podsumowania konta === */
 .summary-card {
     -fx-background-color: #272727;
     -fx-background-radius: 12;
@@ -77,19 +82,21 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 15, 0.4, 0, 2);
 }
 
+/* Tytuł konta */
 .summary-card Label.account-title {
     -fx-text-fill: #FFA552;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
 }
 
+/* Saldo konta */
 .summary-card Label.account-balance {
     -fx-text-fill: white;
     -fx-font-size: 24px;
     -fx-font-weight: bold;
 }
 
-/* Recent transactions table */
+/* === Tabela transakcji === */
 .transaction-table {
     -fx-background-color: transparent;
     -fx-border-radius: 6;
@@ -110,6 +117,7 @@
     -fx-background-color: #272727;
     -fx-text-fill: white;
 }
+
 .transaction-table .table-row-cell:filled:selected,
 .transaction-table .table-row-cell:filled:hover {
     -fx-background-color: #FFA552;
@@ -122,11 +130,13 @@
     -fx-padding: 5 10;
 }
 
+/* Etykiety w układach HBox */
 HBox > Label {
     -fx-text-fill: white !important;
     -fx-font-size: 14px;
 }
 
+/* Rozmiarowanie dla kontenerów */
 .pane, .vbox, .hbox, .border-pane {
     -fx-pref-width: USE_COMPUTED_SIZE;
     -fx-pref-height: USE_COMPUTED_SIZE;
@@ -134,12 +144,13 @@ HBox > Label {
     -fx-min-height: 0;
 }
 
+/* Czcionka ikon */
 .font-icon,
 .sidebar-icon {
     -fx-font-family: "Material Design Icons";
 }
 
-/* --- filter Bar  --- */
+/* === Pasek filtrów === */
 .filter-bar {
     -fx-padding: 12 16;
     -fx-background-color: #1f1f1f;
@@ -184,14 +195,13 @@ HBox > Label {
     -fx-opacity: 0.85;
 }
 
+/* === Ustawienia limitów === */
 .limit-settings {
     -fx-background-color: #272727;
     -fx-background-radius: 12;
     -fx-padding: 20;
     -fx-spacing: 15;
-    -fx-effect: dropshadow(
-            gaussian, rgba(0,0,0,0.4), 12, 0.4, 0, 2
-    );
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 12, 0.4, 0, 2);
     -fx-min-width: 300;
     -fx-max-width: 400;
     -fx-min-height: 300;
@@ -223,9 +233,7 @@ HBox > Label {
     -fx-background-radius: 6;
     -fx-padding: 8 16;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(
-            gaussian, rgba(0,0,0,0.2), 6, 0.2, 0, 1
-    );
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0.2, 0, 1);
 }
 .limit-settings .limit-button:hover {
     -fx-background-color: #B34E00;
@@ -238,9 +246,7 @@ HBox > Label {
     -fx-background-radius: 6;
     -fx-padding: 8 16;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(
-            gaussian, rgba(0,0,0,0.2), 6, 0.2, 0, 1
-    );
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0.2, 0, 1);
 }
 .limit-settings .limit-button-secondary:hover {
     -fx-opacity: 0.85;
@@ -251,54 +257,51 @@ HBox > Label {
     -fx-alignment: CENTER;
 }
 
+/* Style dodatkowe dla kontrolek wejściowych */
 .limit-settings .limit-input .label {
     -fx-text-fill: #FFFFFF;
 }
-
 .limit-settings .limit-input .list-cell {
     -fx-text-fill: #FFFFFF;
     -fx-background-color: #2b2b2b;
 }
-
 .limit-settings .limit-input .list-view {
     -fx-background-color: #2b2b2b;
 }
-
 .limit-settings .limit-input .list-cell:hover {
     -fx-background-color: #3c3c3c;
 }
-
 .limit-settings .limit-input .arrow-button {
     -fx-background-color: transparent;
 }
 
-/* --- Stats Card (sekcja Statystyk) --- */
+/* === Karta statystyk === */
 .stats-card {
-    -fx-background-color: #272727;               /* to samo tło co w .summary-card */
-    -fx-background-radius: 12;                   /* zaokrąglone rogi */
-    -fx-padding: 20;                             /* odstęp od krawędzi */
-    -fx-spacing: 10;                             /* odstęp pomiędzy węzłami wewnątrz */
-    -fx-alignment: CENTER;                       /* wyśrodkuj zawartość */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 12, 0.4, 0, 2); /* lekki cień */
-    -fx-min-width: 300;                          /* minimalna szerokość */
-    -fx-max-width: 400;                          /* maksymalna szerokość */
+    -fx-background-color: #272727;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+    -fx-alignment: CENTER;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 12, 0.4, 0, 2);
+    -fx-min-width: 300;
+    -fx-max-width: 400;
 }
 
 .stats-card .stats-balance {
-    -fx-text-fill: white;                        /* biały tekst */
-    -fx-font-size: 24px;                         /* większa czcionka dla bilansu */
-    -fx-font-weight: bold;                       /* pogrubienie */
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
 }
 
 .stats-card .stats-text {
-    -fx-text-fill: white;                        /* biały tekst */
-    -fx-font-size: 16px;                         /* standardowa czcionka */
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
 }
 
 .category-stats-box {
-    -fx-background-color: transparent;           /* przejrzyste tło (dziedziczy z .stats-card) */
-    -fx-padding: 0 0 0 0;                        /* brak dodatkowych wypełnień */
-    -fx-spacing: 5;                              /* odstęp pomiędzy etykietami w kategorii */
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 0 0;
+    -fx-spacing: 5;
 }
 
 .category-stats-box Label {
@@ -307,6 +310,7 @@ HBox > Label {
     -fx-font-weight: bold;
 }
 
+/* Dodatkowe style przycisków i układu statystyk */
 .limit-button-secondary {
     -fx-background-color: #424242;
     -fx-text-fill: #ffffff;
@@ -327,6 +331,7 @@ HBox > Label {
     -fx-min-width: 440;
     -fx-pref-width: 480;
     -fx-max-width: 800;
+    -fx-max-height: 500;
     -fx-padding: 35;
     -fx-spacing: 20;
     -fx-alignment: TOP_CENTER;
@@ -371,6 +376,7 @@ HBox > Label {
     -fx-padding: 4 6 0 6;
 }
 
+/* Stylizacja wykresu kołowego */
 .pie-chart {
     -fx-background-color: transparent;
     -fx-pie-label-visible: true;
@@ -393,20 +399,7 @@ HBox > Label {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 2, 0.6, 0, 0);
 }
 
-.limit-button-secondary {
-    -fx-background-color: #4A4A4A;
-    -fx-text-fill: #ffffff;
-    -fx-font-weight: bold;
-    -fx-background-radius: 6;
-    -fx-padding: 9 18;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0.25, 0, 2);
-}
-
-.limit-button-secondary:hover {
-    -fx-opacity: 0.88;
-}
-
+/* Etykiety na wykresie */
 .chart-pie-label {
     -fx-fill: #ffffff;
     -fx-font-size: 14px;
@@ -416,6 +409,3 @@ HBox > Label {
 .chart-pie-label-line {
     -fx-stroke: #ffffff;
 }
-
-
-
